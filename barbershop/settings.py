@@ -107,7 +107,7 @@ TEMPLATES = [
 #     }
 # }
 
-DATABASE_URL = 'mysql://root:BGH4e-ch5eAE53gdgC3G4DF5eGB-B2G2@roundhouse.proxy.rlwy.net:43485/railway'
+DATABASE_URL = 'mysql://root:CD-2b1Fb1Hc6hB16aA-bDhE-Aaad-4H6@monorail.proxy.rlwy.net:43857/railway'
 
 # Parse database configuration from $DATABASE_URL
 db_config = dj_database_url.parse(DATABASE_URL)

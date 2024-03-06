@@ -1,9 +1,6 @@
 from django.db import models
-from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
-from rest_framework.authtoken.models import Token
 from django.conf import settings
-from django.dispatch import receiver
 
 
 class Users(AbstractUser):
@@ -38,25 +35,9 @@ class Users(AbstractUser):
     def __str__(self):
         return self.username
 
-class Manager(models.Model):
-    user = models.OneToOneField(Users, related_name="manager", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.user.username
     
 class PaymentTransaction(models.Model):
-    transaction_id = models.CharField(max_length=100)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    # Additional fields as needed
-    
-    def __str__(self):
-        return f"Transaction ID: {self.transaction_id}, Amount: {self.amount}, Status: {self.status}"
-class Payment(models.Model):
-    
     BANK = "bank"
     MPESA = "mpesa"
     CASH = "cash"
@@ -66,15 +47,29 @@ class Payment(models.Model):
         (MPESA, "mpesa"),
         (CASH, "cash"),
     ]
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="payment", on_delete=models.CASCADE, null=True, blank=True)
-    amount = models.IntegerField( max_length=100, null=True, blank=True)
-    payment_method= models.CharField(max_length=255, choices=PAYMENT_CHOICES, null=True, blank=True) # Cash, Mpesa, Card
-    balance = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True)
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="payments", on_delete=models.CASCADE, null=True, blank=True)
+    transaction_id = models.CharField(max_length=100, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    status = models.CharField(max_length=20 ,null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True , null=True, blank=True)
+    payment_method = models.CharField(max_length=255, choices=PAYMENT_CHOICES, null=True, blank=True)
+    balance = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True)
+    merchant_request_id = models.CharField(max_length=100, null=True, blank=True)
+    checkout_request_id = models.CharField(max_length=100, null=True, blank=True)
+    result_desc = models.CharField(max_length=255, null=True, blank=True)
+    mpesa_receipt_number = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    result_code = models.IntegerField(null=True, blank=True)
+    booking_date = models.DateField(null=True, blank=True)
+    transaction_date = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='paymenttho')
-    
+
     def __str__(self):
-        return self.amount
+        return f"Transaction ID: {self.transaction_id}, Amount: {self.amount}, Status: {self.status}"
+
+
 
 
 

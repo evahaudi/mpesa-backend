@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Payment,Users
+from .models import Users,PaymentTransaction
 
 
-admin.site.register(Payment)
+admin.site.register(PaymentTransaction)
 admin.site.register(Users)
